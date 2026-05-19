@@ -25,7 +25,7 @@ library(mlr3learners)
 library(arrow)
 library(recipes)
 library(xgboost)
-############################### Importation de la base de données finale ##############################
+############################### Importation de la base de donnÃ©es finale ##############################
 
 setwd("C:/Users/Public/Documents/Lyna_Clement/data/")
 data <-read_parquet("base_finale.parquet")
@@ -126,7 +126,7 @@ for(name_g in names(learner_g)){
     
     dml_tmp$fit(store_predictions = TRUE)
     
-    #Résidus cross fittés
+    #RÃ©sidus cross fittÃ©s
     g0_resid <-as.numeric(dml_tmp$predictions$ml_g0)
     g1_resid <-as.numeric(dml_tmp$predictions$ml_g1)
     m_resid <-as.numeric(dml_tmp$predictions$ml_m)
@@ -167,7 +167,7 @@ print(results[order(results$rmse_g0, results$rmse_g1,
       row.names = FALSE)
 
 
-#On récupère le résultat du meilleur learner
+#On rÃ©cupÃ¨re le rÃ©sultat du meilleur learner
 best_g_name<-results%>% group_by(learner_g)%>% summarise(rmse_g_min = min(rmse_g_mean), .groups = "drop")%>%
   slice_min(rmse_g_min, n = 1)%>%
   pull(learner_g)
