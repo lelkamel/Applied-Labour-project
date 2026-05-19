@@ -20,16 +20,17 @@ All analyses rely on the **ForCE** dataset (Formation, Chômage et Emploi), mill
 ---
 
 ## 🗂️ Repository Structure
-├── code/
-│   ├── 1_detection_faillite_downsizing.R
-│   ├── 2_base_individuelle_dernier_contrat.R
-│   ├── 3_formation.R
-│   ├── 4_variable_interet.R
-│   ├── 5_var_controle.R
-│   └── 6_dml.R
-└── figures/
-├── descriptive_stats_formation.png
-└── propensity_score_overlap.png
+│
+├── 📂 code/
+│   ├── 📄 1_detection_faillite_downsizing.R
+│   ├── 📄 2_base_individuelle_dernier_contrat.R
+│   ├── 📄 3_formation.R
+│   ├── 📄 4_variable_interet.R
+│   ├── 📄 5_var_controle.R
+│   └── 📄 6_dml.R
+│
+└── 📂 figures/
+    └── 🖼️ propensity_score_overlap.png
 
 ---
 
@@ -40,7 +41,6 @@ Identifies firms that underwent **genuine closures** (liquidation) or **large-sc
 
 ### `4_base_individuelle_dernier_contrat.R`
 Constructs the **individual-level analytical sample** from the MMO database. Starting from the universe of contracts in firms identified as having closed, this script:
-- Restricts attention to workers employed in metropolitan France
 - Retains the last contract held prior to displacement for each worker
 - Applies sample quality filters (minimum tenure, contract type, termination motive)
 
