@@ -30,7 +30,7 @@ licencies <-read_parquet("licencies_stables_faillite_18_23.parquet")
 #  Construction d'indicatrice de formation
 ###########################################################################################################################################
 
-# On crée des indicateurs de formation suivie par année
+# On crÃ©e des indicateurs de formation suivie par annÃ©e
 #2023
 formation = licencies %>%
   left_join(brest_2023 %>% mutate(formation_2023 = 1) %>% select(id_force,formation_2023)
@@ -47,8 +47,8 @@ formation = formation %>%
             , by = "id_force") %>% 
   mutate(formation_2021 = ifelse(is.na(formation_2021),0,formation_2021))
 
-#2017 à 2020 : La base est différente pour ces années : on a une date d'entrée plutot qu'une variable par année. 
-#Donc on extrait l'année, puis on pivote pour créer les mêmes colonnes. 
+#2017 Ã  2020 : La base est diffÃ©rente pour ces annÃ©es : on a une date d'entrÃ©e plutot qu'une variable par annÃ©e. 
+#Donc on extrait l'annÃ©e, puis on pivote pour crÃ©er les mÃªmes colonnes. 
 names(brest_2017_20) = tolower(names(brest_2017_20))
 brest_2017_20_retraite = brest_2017_20 %>%
   #slice_sample(n = 1000) %>%
@@ -66,7 +66,7 @@ brest_2017_20_retraite = brest_2017_20_retraite %>%
   mutate(
     sum_form = formation_2017 + formation_2018+ formation_2019+ formation_2020
   )
-#Attention on a toujours une ligne par personne, par année
+#Attention on a toujours une ligne par personne, par annÃ©e
 brest_2017_20_retraite%>% filter(id_force == "FORCE0002502467")
 #On corrige
 brest_2017_20_retraite_clean<-brest_2017_20_retraite%>% group_by(id_force)%>%
@@ -80,7 +80,7 @@ brest_2017_20_retraite_clean<-brest_2017_20_retraite%>% group_by(id_force)%>%
             ), 
             .groups = "drop")
 
-#Enfin on assemble toutes les années, on calcule le nombre de formations par années puis on repasse au format long
+#Enfin on assemble toutes les annÃ©es, on calcule le nombre de formations par annÃ©es puis on repasse au format long
 formation = formation %>%
   #select(-c(formation_2017,formation_2018, formation_2019, formation_2020))
   left_join(brest_2017_20_retraite_clean, by = "id_force") 
@@ -110,10 +110,10 @@ formation_final = formation %>%
   )
 
 ###############################################################################################################################
-#  Merge avec les données de contrat
+#  Merge avec les donnÃ©es de contrat
 ##############################################################################################################################
 
-#On passe au format large, et on ne retient que les formations suivies après notre evenement
+#On passe au format large, et on ne retient que les formations suivies aprÃ¨s notre evenement
 formation_final_post<-formation_final%>%left_join(licencies%>% select(id_force, finctt_corr), by = "id_force")%>%
   mutate(finctt_corr = as.Date(finctt_corr), 
          annee = as.integer(annee), 
@@ -259,7 +259,7 @@ licencies_new_formation<- licencies_new_formation%>%
   select(-starts_with("p2_"), -in_brest, -in_p2)
 
 #####################################################################################################################################################################
-#  Quelques statistiques descriptives (mises à jour)
+#  Quelques statistiques descriptives (mises Ã  jour)
 ###############################################################################~#####################################################################################
 library(ggplot2)
 theme_sns<-theme_minimal(base_size = 13)+ 
@@ -315,7 +315,7 @@ ggsave("formation_avp2_AL.png", p4, width = 10, height = 6, dpi=300)
 write_parquet(licencies_new_formation,"C:/Users/Public/Documents/Lyna_Clement/data/licencies_stables_faillite_18_23_avec_formation_et_p2.parquet")
 
 ################################################################################################################################################
-# On récupère les dates des formations
+# On rÃ©cupÃ¨re les dates des formations
 ################################################################################################################################################
 id_champ<-licencies%>%pull(id_force)
 licencies<-licencies%>%mutate(finctt_corr=as.Date(finctt_corr))
