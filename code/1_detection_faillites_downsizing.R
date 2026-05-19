@@ -56,7 +56,7 @@ for (i in 17:22) {
   assign(name_df,df)
 }
 
-# Etape 3 : Créer un dataframe de suivit des effectifs des entreprises.
+# Etape 3 : CrÃ©er un dataframe de suivit des effectifs des entreprises.
 
 ent_full = tibble()
 for (i in c(17:22)) {
@@ -119,7 +119,7 @@ down_sizing = ent_full_v2 %>%
 # down_sizing_17_23 = read_parquet("down_sizing_17_23.parquet")
 #setwd("//casd.fr/casdfs/Projets/ENSAE02/Data")
 
-# Etape 3 : Verifier si des entreprises disparéssent plusieurs fois
+# Etape 3 : Verifier si des entreprises disparÃ©ssent plusieurs fois
 
 check = disp_ent %>%
   group_by(siren) %>%
@@ -178,7 +178,7 @@ event_study_graph = chomeur_fermeture  %>%
     motifrupture %in% c("011","012","014","015","025","026","034","036","086","097","110",
                         "111","112","098","113","115","116") ~ "Fin_eco",
     motifrupture %in% c("087","088","095","096") ~ "Lic_faute",
-    motifrupture %in% c("035","037","039","058","059","082") ~ "Départ_Sal",
+    motifrupture %in% c("035","037","039","058","059","082") ~ "DÃ©part_Sal",
     motifrupture %in% c("043","084","110","111","114") ~ "Accords",
     motifrupture %in% c("020","033","032","038","065","066","083","089","091","092","093","099","999") ~ "Autres",
     .default = "",
@@ -226,7 +226,7 @@ classi_motif = chomeur_fermeture  %>%
     motifrupture %in% c("011","012","014","015","025","026","034","036","086","097","110",
                         "111","112","098","113","115","116") ~ "Fin_eco",
     motifrupture %in% c("087","088","095","096") ~ "Lic_faute",
-    motifrupture %in% c("035","037","039","058","059","082") ~ "Départ_Sal",
+    motifrupture %in% c("035","037","039","058","059","082") ~ "DÃ©part_Sal",
     motifrupture %in% c("043","084","110","111","114") ~ "Accords",
     motifrupture %in% c("020","033","032","038","065","066","083","089","091","092","093","099","999") ~ "Autres",
     .default = "",
