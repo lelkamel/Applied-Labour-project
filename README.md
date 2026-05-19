@@ -20,17 +20,20 @@ All analyses rely on the **ForCE** dataset (Formation, Chômage et Emploi), mill
 ---
 
 ## 🗂️ Repository Structure
+```
+repository/
 │
-├── 📂 code/
-│   ├── 📄 1_detection_faillite_downsizing.R
-│   ├── 📄 2_base_individuelle_dernier_contrat.R
-│   ├── 📄 3_formation.R
-│   ├── 📄 4_variable_interet.R
-│   ├── 📄 5_var_controle.R
-│   └── 📄 6_dml.R
+├── code/
+│   ├── 1_detection_faillite_downsizing.R      # Firm closure & downsizing detection
+│   ├── 2_base_individuelle_dernier_contrat.R  # Individual-level sample construction
+│   ├── 3_formation.R                          # Training participation
+│   ├── 4_variable_interet.R                   # Outcome variable construction
+│   ├── 5_var_controle.R                       # Covariate matrix & overlap check
+│   └── 6_dml.R                                # IRM-DML estimation
 │
-└── 📂 figures/
-    └── 🖼️ propensity_score_overlap.png
+└── figures/
+    └── propensity_score_overlap.png           # Propensity score overlap check
+```
 
 ---
 
