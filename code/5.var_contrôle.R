@@ -1,13 +1,13 @@
 ######################################################################################################################
 # 
-#                        Construction des variables de contrÙle pour le DML
+#                        Construction des variables de contr√¥le pour le DML
 #
 #######################################################################################################################
 
 library(ggplot2)
 library(arrow)
 library(tidyverse)
-# ========================= Importation des donnÈes de PÙle emploi et restriction ‡ notre champ ==========================
+# ========================= Importation des donn√©es de P√¥le emploi et restriction √† notre champ ==========================
 
 
 #setwd("//casd.fr/casdfs/Projets/ENSAE02/Data/FORCE_FORCE_2024S2/FH")
@@ -42,7 +42,7 @@ names(de) = tolower(names(de))
 setwd("C:/Users/Public/Documents/Lyna_Clement/data/")
 licencies <-read_parquet("licencies_variable_interet.parquet")
 
-# =================================================== Construction des variables de contrÙle intÈressantes ====================================================
+# =================================================== Construction des variables de contr√¥le int√©ressantes ====================================================
 ######################### DEPUIS MMO #####################
 
 base_X<-licencies%>% mutate(
@@ -57,9 +57,9 @@ base_X<-licencies%>% mutate(
   #la pcs
   pcs_groupe = case_when(
     substr(pcsese, 1, 1)== "1"~"Agriculteur", 
-    substr(pcsese, 1, 1)== "2"~"Artisan/commerÁant",
+    substr(pcsese, 1, 1)== "2"~"Artisan/commer√ßant",
     substr(pcsese, 1, 1)== "3"~"Cadres",
-    substr(pcsese, 1, 1)== "4"~"Profs intermÈdiaires",
+    substr(pcsese, 1, 1)== "4"~"Profs interm√©diaires",
     substr(pcsese, 1, 1)== "5"~"Employes", 
     substr(pcsese, 1, 1)== "6"~"Ouvriers",
     TRUE ~ "Autre"
@@ -68,7 +68,7 @@ base_X<-licencies%>% mutate(
   #francilien ou non
   idf = ifelse(substr(cp_pref, 1, 2)%in% c("75", "77", "78", "91", "92", "93", "94", "95"), 1L, 0L), 
   
-  #bin de salaire conditionnÈe ‡ quali_salaire fiable
+  #bin de salaire conditionn√©e √† quali_salaire fiable
   salaire_fiable = case_when(quali_salaire_base %in% c("7") ~ TRUE, 
                              TRUE ~ FALSE), 
   salaire_bin = case_when(
@@ -88,7 +88,7 @@ base_X<-licencies%>% mutate(
 
 
 ######################### DEPUIS FH ###########################################################################################################
-#On regarde d'abord les variables dispo sur PÙle emploi
+#On regarde d'abord les variables dispo sur P√¥le emploi
 
 de_merge<-de%>% left_join(licencies %>% select(id_force, finctt_corr), by = "id_force")%>%
   mutate(
@@ -99,7 +99,7 @@ de_merge %>% mutate(periode_de = case_when( datins<finctt_corr ~ "AVANT licencie
                                             TRUE ~ "date manquante"))%>% count(periode_de)%>% mutate(pct = round(n/sum(n)*100, 1))%>% print()
 
 de_apres <-de_merge %>% filter(datins>=finctt_corr)
-ids_inscrits_pe<-de_apres %>%distinct(id_force) # 9757 personnes ne se sont pas inscrites ‡ PE
+ids_inscrits_pe<-de_apres %>%distinct(id_force) # 9757 personnes ne se sont pas inscrites √† PE
 
 carac_indiv<-de_apres%>% group_by(id_force)%>% slice_min(datins, n = 1, with_ties = FALSE)%>% ungroup()%>%
   mutate(
@@ -123,9 +123,9 @@ de_avant<-de_merge%>%filter(datins<finctt_corr)%>% group_by(id_force)%>% summari
 
 
 carac_indiv<-carac_indiv%>% left_join(de_avant, by = "id_force")%>% mutate(deja_pe = replace_na(deja_pe, 0L), 
-                                                                           n_episodes = replace_na(n_episodes, 0L)) #on rÈcupËre l'info sur les epxÈriences de chÙmage passÈes
+                                                                           n_episodes = replace_na(n_episodes, 0L)) #on r√©cup√®re l'info sur les epx√©riences de ch√¥mage pass√©es
 
-#Quelques statistiques sur les personnes qui ne se sont pas inscrites ‡ pÙle emploi apres leur licenciement 
+#Quelques statistiques sur les personnes qui ne se sont pas inscrites √† p√¥le emploi apres leur licenciement 
 non_inscrits<-licencies%>% filter(!id_force%in% ids_inscrits_pe$id_force)
 
 base<-licencies%>% mutate(groupe = if_else(id_force %in% ids_inscrits_pe$id_force, "Inscrits_pe", "non inscrits pe"), 
@@ -144,24 +144,24 @@ base<-base %>%
 
 
 
-######################### On Ètudie le support commun  ###########################################################################################
+######################### On √©tudie le support commun  ###########################################################################################
 X_complet<-base_X%>% left_join(carac_indiv, by = "id_force")%>% left_join(licencies %>% select(id_force, traite, emploi_stable_24m, censure), by = "id_force")
 
-X_complet<-X_complet %>% filter(id_force %in% ids_inscrits_pe$id_force) #on ne garde que les gens qui se sont inscrit ‡ PE apres leur licenciement (voir rapport )
+X_complet<-X_complet %>% filter(id_force %in% ids_inscrits_pe$id_force) #on ne garde que les gens qui se sont inscrit √† PE apres leur licenciement (voir rapport )
 
 X_complet %>% summarise(across(everything(), ~class(.)))%>% pivot_longer(everything(), 
                                                                         names_to = "variable", 
-                                                                        values_to = "type")%>% print(n = Inf) #avant de lancer le modËle, je regarde la catÈgorie de chacune des variables
+                                                                        values_to = "type")%>% print(n = Inf) #avant de lancer le mod√®le, je regarde la cat√©gorie de chacune des variables
 
 X_complet %>% summarise(across(everything(), ~sum(is.na(.))))%>% pivot_longer(everything(), 
                                                                          names_to = "variable", 
-                                                                         values_to = "n_na")%>% print(n = Inf) #avant de lancer le modËle, je regarde la catÈgorie de chacune des variables
+                                                                         values_to = "n_na")%>% print(n = Inf) #avant de lancer le mod√®le, je regarde la cat√©gorie de chacune des variables
 
 
 X_complet<-X_complet%>% 
   mutate(
   
-    #On commence par traiter le cas des variables catÈgorielles
+    #On commence par traiter le cas des variables cat√©gorielles
     pcs_groupe = as.factor(pcs_groupe), 
     modeexercice = as.factor(modeexercice), 
     type_layoff = as.factor(type_layoff), 
@@ -177,8 +177,8 @@ X_complet<-X_complet%>%
     censure = as.integer(censure), 
    
      traite = case_when(
-       traite == "Non formÈ" ~0L, 
-       traite == "FormÈ" ~ 1L
+       traite == "Non form√©" ~0L, 
+       traite == "Form√©" ~ 1L
      )
     
   )
@@ -198,13 +198,13 @@ ggplot(X_complet, aes(x = ps, fill = factor(traite)))+
   geom_density(alpha = 0.5)+
   scale_fill_manual(
     values = c("#4678CF", "#D65"), 
-    labels = c("Non formÈs", "FormÈs")
+    labels = c("Non form√©s", "Form√©s")
   )+ 
   geom_vline(xintercept = c(0.05, 0.95), 
              linetype = "dashed", color = "black")+ 
   labs ( title = "Distribution du propensity score", 
-         x = "P(formÈ|X", 
-         y = "DensitÈ", 
+         x = "P(form√©|X", 
+         y = "Densit√©", 
          fill = NULL ) + 
   theme_minimal()
 
@@ -212,13 +212,13 @@ p_score<-ggplot(X_complet, aes(x = ps, fill = factor(traite)))+
   geom_density(alpha = 0.5)+
   scale_fill_manual(
     values = c("#4678CF", "#D65"), 
-    labels = c("Non formÈs", "FormÈs")
+    labels = c("Non form√©s", "Form√©s")
   )+ 
   geom_vline(xintercept = c(0.05, 0.95), 
              linetype = "dashed", color = "black")+ 
   labs ( title = "Distribution du propensity score", 
-         x = "P(formÈ|X", 
-         y = "DensitÈ", 
+         x = "P(form√©|X", 
+         y = "Densit√©", 
          fill = NULL ) + 
   theme_minimal()
 
