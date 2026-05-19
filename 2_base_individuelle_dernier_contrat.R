@@ -1,5 +1,5 @@
 ################################################################################
-#  Matching : entreprises liquidées
+#  Matching : entreprises liquidÃ©es
 #
 ################################################################################
 library("arrow")
@@ -10,7 +10,7 @@ library("ggplot2")
 ###############################################################################
 #  Importation de la base mmo, ajout des informations critiques (date du traitement)
 ###############################################################################
-#Contrats associés aux entreprises ayant fait faillite entre 2017 et 2023
+#Contrats associÃ©s aux entreprises ayant fait faillite entre 2017 et 2023
 setwd("C:/Users/Public/Documents/Lyna_Clement/data/mmo_liquidation")
 mmo_2018<-read_parquet("mmo_2018_disp_downsize_all_variables.parquet")
 mmo_2019<-read_parquet("mmo_2019_disp_downsize_all_variables.parquet")
@@ -28,18 +28,18 @@ disp_ent_annee_depart<-disp_ent%>% select(siren, annee_disp)
 # Passer au format long
 ###########################################################################################################################
 
-# Maintenant, il faut crÃ©er pour chaque personne licenciÃ©e par une entreprise ayant Ã©tÃ© liquidÃ©e ou ayant eu un downsizing important (issue de la base de ClÃ©ment ) une ligne par annÃ©e de contrat (pdt les 3 derniÃ¨res annÃ©es qui prÃ©cÃ¨dent le licenciement; dc avant 2020)
-# Pour chaque ligne il faut mettre Ã  jour les termes du contrat en rÃ©cupÃ©rant les donnÃ©es des bases MMO correspondantes et en utilisant l'identifiant des contrats L_contrat_sqn
-# Il faut ajouter aussi les caractÃ©ristiques de la personnes qui ne changent pas (par hypothÃ¨se), issues de FH [prendre en compte Ã©galement les variations des contrÃ´les correspondants]
-# et ajouter l'info de la formation pour l'annÃ©e correspondante
+# Maintenant, il faut crÃƒÂ©er pour chaque personne licenciÃƒÂ©e par une entreprise ayant ÃƒÂ©tÃƒÂ© liquidÃƒÂ©e ou ayant eu un downsizing important (issue de la base de ClÃƒÂ©ment ) une ligne par annÃƒÂ©e de contrat (pdt les 3 derniÃƒÂ¨res annÃƒÂ©es qui prÃƒÂ©cÃƒÂ¨dent le licenciement; dc avant 2020)
+# Pour chaque ligne il faut mettre ÃƒÂ  jour les termes du contrat en rÃƒÂ©cupÃƒÂ©rant les donnÃƒÂ©es des bases MMO correspondantes et en utilisant l'identifiant des contrats L_contrat_sqn
+# Il faut ajouter aussi les caractÃƒÂ©ristiques de la personnes qui ne changent pas (par hypothÃƒÂ¨se), issues de FH [prendre en compte ÃƒÂ©galement les variations des contrÃƒÂ´les correspondants]
+# et ajouter l'info de la formation pour l'annÃƒÂ©e correspondante
 
-#Il faudra traiter les contrats qui sont NA pour finCTT alors que disp_ent est 2020 ou antérieure (en effet le NA ne peut pas s'expliquer simplement par la continuité du contrat)
+#Il faudra traiter les contrats qui sont NA pour finCTT alors que disp_ent est 2020 ou antÃ©rieure (en effet le NA ne peut pas s'expliquer simplement par la continuitÃ© du contrat)
 
 
 #Filtrage des bases mmo
 mmo_ent_liquidation<-function(base_mmo, annee){
-  #fonction qui sélectionne les contrats de MMO concernés par une liquidation d'entreprise +/- proche
-  #qui crée les groupes AL et IL
+  #fonction qui sÃ©lectionne les contrats de MMO concernÃ©s par une liquidation d'entreprise +/- proche
+  #qui crÃ©e les groupes AL et IL
   
   disp_ent<-read_parquet("C:/Users/Public/Documents/Lyna_Clement/data/disp_ent_17_23.parquet")
   disp_ent<-disp_ent%>% select(siren, annee_disp)
@@ -66,7 +66,7 @@ for (annee in annees){
 rm(resultat)
 rm(mmo_2023)
 
-#Concaténation
+#ConcatÃ©nation
 for (annee in annees){
   base<-paste0("mmo_", annee, "_liquidation")
   df<-get(base)%>%
@@ -98,15 +98,15 @@ rm(mmo_2022)
 rm(mmo_2023)
 
 ###########################################################################################################################
-# Filtre et nettoyage des données
+# Filtre et nettoyage des donnÃ©es
 ###########################################################################################################################
 
 #ON FILTRE UNE PARTIE DES DONNEES !
-#Il y a peut être des choix de filtrage à faire pour causes de : 
-        #1. J'enlève de la base les personnes ayant connu un licenciment pour cause de liquidation d'entreprise antérieure à 2017
-        #3. L'emploi n'est pas stable => J'enlève toutes les personnes non stables, ayant un modeexercice == 99
-        #J'enlève les personnes ayant plus d'un contrat 2 avant avant le mass layoff; en revanche, apres le mass layoff, je conserve l'ensemble des formes de réinsertion
-        # y compris, les trajectoires heurtées, le multi-emploi et les allers-retours vers l'emploi, car ce sont précisément les objets d'intérêt
+#Il y a peut Ãªtre des choix de filtrage Ã  faire pour causes de : 
+        #1. J'enlÃ¨ve de la base les personnes ayant connu un licenciment pour cause de liquidation d'entreprise antÃ©rieure Ã  2017
+        #3. L'emploi n'est pas stable => J'enlÃ¨ve toutes les personnes non stables, ayant un modeexercice == 99
+        #J'enlÃ¨ve les personnes ayant plus d'un contrat 2 avant avant le mass layoff; en revanche, apres le mass layoff, je conserve l'ensemble des formes de rÃ©insertion
+        # y compris, les trajectoires heurtÃ©es, le multi-emploi et les allers-retours vers l'emploi, car ce sont prÃ©cisÃ©ment les objets d'intÃ©rÃªt
 
 mmo_concat_liquidation<-mmo_concat_liquidation%>% filter(annee_disp>=2018)
 
@@ -118,7 +118,7 @@ mmo_concat_liquidation<-mmo_concat_liquidation%>% mutate(nb_mois_manquants = row
 #instables<-mmo_concat_liquidation%>% filter(statut_stabilite == "instable")%>% select(id_force, annee_disp, modeexercice, disppolitiquepublique, motifrupture, siret_af, salaire_base)
                 # Je vais enlever toutes les personnes ayant un parcours instable 
 
-mmo_concat_liquidation<-mmo_concat_liquidation%>% filter(!(statut_stabilite == "instable")) # à corriger, uniquement avant le licenciement !!
+mmo_concat_liquidation<-mmo_concat_liquidation%>% filter(!(statut_stabilite == "instable")) # Ã  corriger, uniquement avant le licenciement !!
 
 
 
@@ -132,19 +132,19 @@ mmo_concat_liquidation<-mmo_concat_liquidation%>%
          )
 
 
-#je ne conserve qu'un contrat par individu, en sélectionnant en priorité le dernier contrat et le plus long
+#je ne conserve qu'un contrat par individu, en sÃ©lectionnant en prioritÃ© le dernier contrat et le plus long
 contrat_ref<-mmo_concat_liquidation%>% group_by(idsismmo)%>% arrange(desc(finctt), desc(duree_contrat_j))%>%
   slice(1)%>% ungroup()
 
 
-#la base disp_ent a des coquilles, elle intègre probablement de entreprises qui ont fermées mais ont été rachetées (fusions acquisitions)
+#la base disp_ent a des coquilles, elle intÃ¨gre probablement de entreprises qui ont fermÃ©es mais ont Ã©tÃ© rachetÃ©es (fusions acquisitions)
 contrats_suspects<-contrat_ref%>% filter(annee_finctt>annee_disp)
-cat("Diagnostic des conntrats suspects (entreprises n'ayant pas vraiment fermé")
+cat("Diagnostic des conntrats suspects (entreprises n'ayant pas vraiment fermÃ©")
 cat("Nombre de contrats suspects :", nrow(contrats_suspects), "\n")
-cat("Nombre de personnes concernées :", n_distinct(contrats_suspects$idsismmo), "\n")
-cat("Nombre d'entreprises concernées :", n_distinct(contrats_suspects$siren), "\n")
+cat("Nombre de personnes concernÃ©es :", n_distinct(contrats_suspects$idsismmo), "\n")
+cat("Nombre d'entreprises concernÃ©es :", n_distinct(contrats_suspects$siren), "\n")
 
-#Analyser les siren problématiques
+#Analyser les siren problÃ©matiques
 diagnostic_siren<-contrats_suspects%>% group_by(siren, annee_disp)%>% summarise(
   n_indiv = n_distinct(idsismmo), 
   n_contrats = n(), 
@@ -157,7 +157,7 @@ diagnostic_siren<-contrats_suspects%>% group_by(siren, annee_disp)%>% summarise(
 cat("===== Diagnostic siren ===========")
 print(diagnostic_siren, n = Inf)
 
-cat("===== Distribution des écarts (fin de contrat - annee de liquidation de l'entreprise) ===========")
+cat("===== Distribution des Ã©carts (fin de contrat - annee de liquidation de l'entreprise) ===========")
 contrats_suspects%>% mutate(ecart = annee_finctt-annee_disp)%>% 
   count(ecart)%>%
   arrange(ecart)%>% print()
@@ -169,7 +169,7 @@ disp_ent_long<-disp_ent%>% pivot_longer(cols = starts_with("eff_"),
 effectif_avant_disp<-disp_ent_long%>% group_by(siren)%>% filter(annee<annee_disp)%>% filter(!is.na(effectif))%>%slice_max(annee, n=1)%>% ungroup()%>% 
   select(siren, annee_eff_ref=annee, eff_avant_disp = effectif)
 
-#diagnostic complet (en intégrant l'information sur les effectifs des entreprises concernées)
+#diagnostic complet (en intÃ©grant l'information sur les effectifs des entreprises concernÃ©es)
 diagnostic_complet<-diagnostic_siren%>% left_join(effectif_avant_disp, by=c("siren"))%>%
   mutate(ratio_suspects = n_indiv/eff_avant_disp, 
          decision = case_when(ecart_max_annees>=2 ~"EXCLURE_SIREN", 
@@ -180,16 +180,16 @@ diagnostic_complet<-diagnostic_siren%>% left_join(effectif_avant_disp, by=c("sir
                               TRUE ~"VERIFIER_MANUELLEMENT"
                               ))
 
-cat("===== Résumé de décisions ===========")
+cat("===== RÃ©sumÃ© de dÃ©cisions ===========")
 diagnostic_complet%>% count(decision)%>%print()
 
-#Application des décisions
+#Application des dÃ©cisions
 siren_exclure <-diagnostic_complet%>% filter(decision=="EXCLURE_SIREN")%>%pull(siren)
 siren_plafonner<-diagnostic_complet%>%filter(decision=="PLAFONNER_FINCTT")%>%pull(siren)
 
 
 ###########################################################################################################################
-# Création d'une base individus
+# CrÃ©ation d'une base individus
 ###########################################################################################################################
 
 base_individus<-contrat_ref%>% filter(!siren %in% siren_exclure)%>% 
@@ -198,15 +198,15 @@ base_individus<-contrat_ref%>% filter(!siren %in% siren_exclure)%>%
          flag_finctt_corr = siren %in%siren_plafonner&annee_finctt>annee_disp)
 
 
-#J'exclus les personnes en intérim, en stage, je les repère grâce à la variable Motifrupture 
-motifs_exclure<-c("032", #intérim
+#J'exclus les personnes en intÃ©rim, en stage, je les repÃ¨re grÃ¢ce Ã  la variable Motifrupture 
+motifs_exclure<-c("032", #intÃ©rim
                   "081", #apprentissage
                   "034", #fin periode d'essai
                   "035", #pareil
-                  "038", #mise à la retraite par l'employeur, pas concerné par le retour à l'emploi
+                  "038", #mise Ã  la retraite par l'employeur, pas concernÃ© par le retour Ã  l'emploi
                   "039", #pareil
-                  "065", #décès employeur
-                  "066", #décès employé
+                  "065", #dÃ©cÃ¨s employeur
+                  "066", #dÃ©cÃ¨s employÃ©
                   "998", #transfert sans rupture
                   "100") #mutation au sein du mm groupe
 
@@ -217,10 +217,10 @@ cat("Apres :", nrow(base_individus_filtre), "individus\n")
 
 #===== Je filtre pour ne conserver que des contrats stables (1 an sans mois de non emploi au sens du BIT) =========
 
-#Je calcule la fenêtre à partir de laquelle évaluer la période d'emploi
+#Je calcule la fenÃªtre Ã  partir de laquelle Ã©valuer la pÃ©riode d'emploi
 #date_fin_ref<-base_individus_filtre%>% select(idsismmo, l_contrat_sqn, finctt_corr)%>% mutate(date_fin = as.Date(finctt_corr), date_debut_fenetre = date_fin %m-% months(12))
 
-#Je récupère les informations sur deux années calendaires
+#Je rÃ©cupÃ¨re les informations sur deux annÃ©es calendaires
 #cols_emploi_bit<-paste0("emploi_bit_", sprintf("%02d", 1:12))
 #base_individus_filtre<-base_individus_filtre%>%
 #  mutate(across(all_of(cols_emploi_bit), 
