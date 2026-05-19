@@ -1,13 +1,13 @@
 ######################################################################################################################
 # 
-#                        Construction de la variable d'intérêt pour le DML
+#                        Construction de la variable d'intÃ©rÃªt pour le DML
 #
 #######################################################################################################################
 
 
 library("haven")
 
-# ========================= Importation des données de Mmo et restriction à notre champ ===================================================================
+# ========================= Importation des donnÃ©es de Mmo et restriction Ã  notre champ ===================================================================
 
 
 #setwd("//casd.fr/casdfs/Projets/ENSAE02/Data/FORCE_FORCE_2024S2/FH")
@@ -49,16 +49,16 @@ names(mmo_21) = tolower(names(mmo_21))
 names(mmo_22) = tolower(names(mmo_22))
 names(mmo_23) = tolower(names(mmo_23))
 names(mmo_24) = tolower(names(mmo_24))
-    #Pour créer la variable d'intérêt, j'identifie les contrats dans mmo qui débutent après la date de licenciement finctt_corr
-    #Je calcule la durée du contrat
-    #Je considère qu'un emploi est stable s'il dure + de 180 jours et s'il est à temps plein (quand Modeexercice permet effectivement d'identifier ça)
+    #Pour crÃ©er la variable d'intÃ©rÃªt, j'identifie les contrats dans mmo qui dÃ©butent aprÃ¨s la date de licenciement finctt_corr
+    #Je calcule la durÃ©e du contrat
+    #Je considÃ¨re qu'un emploi est stable s'il dure + de 180 jours et s'il est Ã  temps plein (quand Modeexercice permet effectivement d'identifier Ã§a)
 
 setwd("C:/Users/Public/Documents/Lyna_Clement/data/")
 licencies <-read_parquet("licencies_stables_faillite_18_23_avec_formation_et_p2.parquet")
-# ========================= Création de la variable d'intérêt ===================================================================
+# ========================= CrÃ©ation de la variable d'intÃ©rÃªt ===================================================================
 
 
-#je concatène mes bases de contrat
+#je concatÃ¨ne mes bases de contrat
 mmo_post<-bind_rows(mmo_19, mmo_20, mmo_21, mmo_22, mmo_23, mmo_24)%>% mutate(debutctt =as.Date(debutctt), 
                                                                               finctt = as.Date(finctt))%>%
   filter(!is.na(debutctt))%>%
@@ -69,9 +69,9 @@ mmo_post<-bind_rows(mmo_19, mmo_20, mmo_21, mmo_22, mmo_23, mmo_24)%>% mutate(de
             finctt = suppressWarnings(max(finctt, na.rm = TRUE)),
             modeexercice = first(modeexercice), 
                          .groups = "drop") %>%
-  mutate(finctt = if_else(is.infinite(finctt), as.Date(NA), finctt))#je ne retiens qu'un contrat par nom de contrats (en effet là, je peux avoir plusieurs mêmes contrats du fait qu'il soient actifs plusieurs années de suite)
+  mutate(finctt = if_else(is.infinite(finctt), as.Date(NA), finctt))#je ne retiens qu'un contrat par nom de contrats (en effet lÃ , je peux avoir plusieurs mÃªmes contrats du fait qu'il soient actifs plusieurs annÃ©es de suite)
 
-#Je joins ces contrats à finctt_corr afin de ne conserver que les contrats post licenciement
+#Je joins ces contrats Ã  finctt_corr afin de ne conserver que les contrats post licenciement
 mmo_post_lic<-mmo_post%>% inner_join(licencies%>% select(id_force, finctt_corr), by = "id_force")%>% filter(debutctt>finctt_corr)%>%
   mutate(finctt_obs = if_else(is.na(finctt), as.Date("2024-12-31"), finctt),
     
@@ -115,13 +115,13 @@ variable_interet<-variable_interet%>% left_join(premier_contrat_stable, by = "id
                                        TRUE ~ 0L), 
          censure = is.na(date_debut_emploi_stable) | as.numeric(date_debut_emploi_stable)>as.numeric(date_horizon))
 
-variable_interet<-variable_interet%>% left_join(licencies, by=c("id_force", "finctt_corr"))%>% mutate(traite = if_else(sum_form>0, "Formé", "Non formé"))
+variable_interet<-variable_interet%>% left_join(licencies, by=c("id_force", "finctt_corr"))%>% mutate(traite = if_else(sum_form>0, "FormÃ©", "Non formÃ©"))
 
 cat("=== EMPLOI STABLE 24 MOIS =================")
 variable_interet%>% count(emploi_stable_24m)%>% mutate(pct = round(n/sum(n)*100, 1))%>% print()
 variable_interet%>% count(censure)%>% mutate(pct = round(n/sum(n)*100, 1))%>% print()
 
-cat("=================== EMPLOI STABLE : formés contre non formés =====================")
+cat("=================== EMPLOI STABLE : formÃ©s contre non formÃ©s =====================")
 variable_interet%>% group_by(traite)%>% summarise(n = n(), 
                                                   n_emploi_stable = sum(emploi_stable_24m==1), 
                                                   .groups = "drop")%>%print()
